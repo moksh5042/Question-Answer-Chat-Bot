@@ -56,3 +56,21 @@ if question_image and answer_image:
         st.write("OCR genrated text of answer")
         st.write(ans_text)
 
+    if st.button("Run"):
+
+        template = """You are a answer evaluator whose task is to evaluate the answer of the following question and give marks between 1 to 10.
+IMPORTANT: Only return marks nothing else.
+
+Question: {ques_text}
+
+Student Answer: {stud_ans_text}"""
+
+        prompt = ChatPromptTemplate.from_template(template)
+        chain = prompt | model
+        res = chain.invoke({"ques_text": qus_text,
+                            "stud_ans_text": ans_text})
+
+        # print(res)
+        st.markdown("test")
+        st.write("Marks Obtain by student out of 10")
+        st.write(res)
