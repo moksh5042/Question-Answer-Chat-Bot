@@ -1,0 +1,4 @@
+langchain-ollama
+streamlit
+paddleocr
+paddlepaddle-gpu
