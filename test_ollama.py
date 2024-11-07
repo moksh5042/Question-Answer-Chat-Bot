@@ -13,7 +13,7 @@ Student Answer: {stud_ans_text}"""
 
 prompt = ChatPromptTemplate.from_template(template)
 
-model = OllamaLLM(model="llama3.2:1b")
+model = OllamaLLM(model="llama3.2:3b")
 
 chain = prompt | model
 
