@@ -13,17 +13,46 @@ BASE_FOLDER = os.getcwd()
 BASE_IMAGE_FOLDER = os.path.join(BASE_FOLDER,"Img")
 os.makedirs(BASE_IMAGE_FOLDER,exist_ok=True)
 
+st.title("Answer Evaluator")
+
 # Sidebar
 with st.sidebar:
     question_text = st.text_area("Question Text")
+    st.write("OR")
     question_image = st.file_uploader("Image of Question")
     answer_text = st.text_area("Answer Text")
+    st.write("OR")
     answer_image = st.file_uploader("Image of Answer")
-    answer_type = st.selectbox("Type of Answer", ["MCQ", "Long Answer", "Short Answer"])
+    
+    # answer_type = st.selectbox("Type of Answer", ["MCQ", "Long Answer", "Short Answer"])
+
+
+if question_image and question_text:
+    st.error("Shi data daal")
+
+if answer_image and answer_text:
+    st.error("Shi data daal")
+
+
+def llm_output(qus_text, ans_text):
+    template = """You are a answer evaluator whose task is to evaluate the answer of the following question and give marks between 1 to 10.
+IMPORTANT: Only return marks nothing else.
+
+Question: {ques_text}
+
+Student Answer: {stud_ans_text}"""
+
+    prompt = ChatPromptTemplate.from_template(template)
+    chain = prompt | model
+    res = chain.invoke({"ques_text": qus_text,
+                        "stud_ans_text": ans_text})
+
+    print(res)
+    # st.markdown("test")
+    return res
+    
 
 # Main Content
-st.title("Answer Evaluator")
-
 if question_image and answer_image:
 
     if question_image:
@@ -38,8 +67,8 @@ if question_image and answer_image:
             qus_text+=x[1][0]
             qus_text+=" "    
         # print(qus_text)
-        st.write("OCR genrated text of question")
-        st.write(qus_text)
+        # st.write("OCR genrated text of question")
+        # st.write(qus_text)
 
     if answer_image:
         st.image(answer_image, caption="Image of Answer")
@@ -53,24 +82,24 @@ if question_image and answer_image:
             ans_text+=x[1][0]
             ans_text+=" "
         # print(ans_text)
-        st.write("OCR genrated text of answer")
-        st.write(ans_text)
 
-    if st.button("Run"):
 
-        template = """You are a answer evaluator whose task is to evaluate the answer of the following question and give marks between 1 to 10.
-IMPORTANT: Only return marks nothing else.
+        st.markdown('''
+        ## OCR genrated text: ''')
+        # st.write(ans_text)
+        st.write(f"##### {qus_text}")
+        st.write(f"##### {ans_text}")
+        
 
-Question: {ques_text}
 
-Student Answer: {stud_ans_text}"""
+else:
+    qus_text = question_text
+    ans_text = answer_text
 
-        prompt = ChatPromptTemplate.from_template(template)
-        chain = prompt | model
-        res = chain.invoke({"ques_text": qus_text,
-                            "stud_ans_text": ans_text})
-
-        # print(res)
-        st.markdown("test")
-        st.write("Marks Obtain by student out of 10")
-        st.write(res)
+if st.button("Run"):
+    res = llm_output(qus_text=qus_text,
+                        ans_text=ans_text)
+    st.write("Marks Obtain by student out of 10")
+    st.write(res)
+        
+        
