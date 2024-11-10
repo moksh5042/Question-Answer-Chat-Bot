@@ -34,20 +34,25 @@ if answer_image and answer_text:
     st.error("Shi data daal")
 
 
-def llm_output(qus_text, ans_text):
-    template = """You are a answer evaluator whose task is to evaluate the answer of the following question and give marks between 1 to 10.
-IMPORTANT: Only return marks nothing else.
+def llm_output(qus_text, ans_text,total_marks):
+    print("text",qus_text, ans_text,total_marks)
+    template = """You are an answer evaluator responsible for grading a student's response to a question. Your task is to assign a score from 1 to {total_marks} based on the accuracy, relevance, and completeness of the student's answer. 
+
+IMPORTANT: Provide only the numeric score as your response, with no additional text or commentary.
 
 Question: {ques_text}
 
 Student Answer: {stud_ans_text}"""
+    
 
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | model
     res = chain.invoke({"ques_text": qus_text,
-                        "stud_ans_text": ans_text})
-
-    print(res)
+                        "stud_ans_text": ans_text,
+                        "total_marks":total_marks})
+    # print
+    
+    # print("llm",res)
     # st.markdown("test")
     return res
     
@@ -87,19 +92,27 @@ if question_image and answer_image:
         st.markdown('''
         ## OCR genrated text: ''')
         # st.write(ans_text)
-        st.write(f"##### {qus_text}")
-        st.write(f"##### {ans_text}")
-        
+        # st.write(f"##### {qus_text}")
+        # st.write(f"##### {ans_text}")
+        st.write(f'''    {qus_text}''')
+        st.write(f'''    {ans_text}''')
 
 
 else:
     qus_text = question_text
     ans_text = answer_text
 
+with st.form("my_form"):
+    marks_text = st.text_area("maximun marks? :", "10")
+    submitted = st.form_submit_button("Submit")
+    # st.write(marks_text)
+    # print("marks input",marks_text,submitted)
+
 if st.button("Run"):
     res = llm_output(qus_text=qus_text,
-                        ans_text=ans_text)
-    st.write("Marks Obtain by student out of 10")
+                        ans_text=ans_text,
+                        total_marks=marks_text)
+    st.write(f"Marks Obtain by student out of {marks_text}")
     st.write(res)
         
         
