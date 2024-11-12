@@ -1,7 +1,7 @@
 langchain-ollama
 streamlit
 paddleocr
-paddlepaddle-gpu
+paddlepaddle==3.0.0b0
 setuptools
 python-dotenv
 

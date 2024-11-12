@@ -4,6 +4,13 @@ from langchain_ollama.llms import OllamaLLM
 import streamlit as st
 import os
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+from groq import Groq
+
 
 
 ocr = PaddleOCR()
@@ -55,7 +62,28 @@ Student Answer: {stud_ans_text}"""
     # print("llm",res)
     # st.markdown("test")
     return res
-    
+
+def groq_llms(qus_text, ans_text, total_marks):
+    client = Groq()
+    completion = client.chat.completions.create(
+        model="llama3-8b-8192",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are an answer evaluator responsible for grading a student's response to a question. Your task is to assign a score from 1 to {total_marks} based on the accuracy, relevance, and completeness of the student's answer. \n\nIMPORTANT: Provide only the numeric score only as your response, with no additional text or commentary.".format(total_marks=total_marks)
+            },
+            {
+                "role": "user",
+                "content": "Question: {question_text}\n\nStudent Answer: answer_text".format(question_text=qus_text, answer_text=ans_text)
+            }
+        ],
+        temperature=0.2,
+        max_tokens=1024,
+        top_p=1,
+        stop=None,
+    )
+    return completion.choices[0].message.content
+        
 
 # Main Content
 if question_image and answer_image:
@@ -109,7 +137,7 @@ with st.form("my_form"):
     # print("marks input",marks_text,submitted)
 
 if st.button("Run"):
-    res = llm_output(qus_text=qus_text,
+    res = groq_llms(qus_text=qus_text,
                         ans_text=ans_text,
                         total_marks=marks_text)
     st.write(f"Marks Obtain by student out of {marks_text}")
