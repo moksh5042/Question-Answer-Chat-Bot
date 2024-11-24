@@ -95,6 +95,7 @@ if question_image and answer_image:
             f.write(question_image.getvalue())
         question_ocr=ocr.ocr(qus_image_name)
         qus_text=""
+        # print(question_ocr)
         for x in question_ocr[0]:
             # print(x[1][0],end=" ")
             qus_text+=x[1][0]
