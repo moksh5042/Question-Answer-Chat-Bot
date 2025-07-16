@@ -42,7 +42,7 @@ pip install -r requirements_cpu.txt
 
 ### Environment Variables
 
-Create a `.env` file for any required API keys (e.g., Groq, Anthropic).  
+Create a `.env` file for any required API keys (e.g. Groq).  
 Example:
 ```
 GROQ_API_KEY=your_groq_api_key
@@ -77,7 +77,3 @@ streamlit run main.py
 - Images are saved in the `Img/` directory.
 - LLM models and OCR may require additional setup or API keys.
 - For best OCR results, ensure images are clear and well-lit.
-
-## License
-
-[MIT](LICENSE) (add your license file if needed)
