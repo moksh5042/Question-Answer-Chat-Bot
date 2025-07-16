@@ -1,7 +1,7 @@
 langchain-ollama
 streamlit
 paddleocr
-paddlepaddle==3.0.0b0
+paddlepaddle
 setuptools
 python-dotenv
 
